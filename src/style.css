@@ -14,6 +14,11 @@
 	padding: 2rem;
 }
 
+body {
+	background-color: #242424;
+	@apply text-zinc-900;
+}
+
 .container {
 	max-width: 1280px;
 	margin: 0 auto;
@@ -21,30 +26,43 @@
 }
 
 .btn {
-	@apply bg-sky-500 text-white text-center cursor-pointer hover:bg-sky-400 transition py-1 px-3 rounded-xl;
+	@apply bg-green-600 text-white text-center cursor-pointer hover:bg-emerald-500 transition py-1 px-3 rounded-xl;
 }
 
 .btn.disabled {
-	@apply hover:bg-sky-500 cursor-auto;
+	@apply hover:bg-green-600 cursor-auto;
 }
 
 .link {
-    @apply hover:text-zinc-300 cursor-pointer transition;
+	@apply hover:text-zinc-200 cursor-pointer transition;
 }
 
 .error-message {
-	@apply text-red-500 text-sm;
+	@apply text-red-500 text-sm mt-0.5 ml-2.5;
 }
 
 input {
-	@apply w-full border-2 rounded-xl py-1 px-4;
+	@apply w-full border-2 rounded-xl py-1 px-4 text-zinc-200 focus:outline-0;
+	background-color: #242424;
+}
+
+input.error {
+	@apply border-red-500;
 }
 
 .modal-enter-active,
 .modal-leave-active {
-    transition: all 0.2s ease;
+	transition: all 0.2s ease;
 }
+
 .modal-enter-from,
 .modal-leave-to {
-    opacity: 0;
+	opacity: 0;
+}
+
+
+@media (max-width: 475px) {
+    #app {
+        padding: 2rem 0.5rem;
+    }
 }
