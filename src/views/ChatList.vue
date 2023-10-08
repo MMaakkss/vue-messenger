@@ -62,8 +62,10 @@ const chatsCollectionsRef = collection(db, "chats");
 const chatsCollectionsQuery = query(chatsCollectionsRef, orderBy("date", "desc"));
 
 const createNewChat = async () => {
+	let chatName = newChatName.value?.replace(/ +/g, ' ').trim() || "New Chat";
+
 	await addDoc(chatsCollectionsRef, {
-		name: newChatName.value || "New Chat",
+		name: chatName,
 		members: [getAuth().currentUser.uid],
 		messages: [],
 		date: Date.now(),
