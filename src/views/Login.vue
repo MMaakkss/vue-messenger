@@ -41,6 +41,7 @@
 <script setup>
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { emailValidation, passwordValidation } from "@/Composables/formValidaion.js";
+import { signWithGoogle } from "@/Composables/signInWithGoogle.js";
 
 const router = useRouter();
 
@@ -77,13 +78,13 @@ const signIn = () => {
 			}
 		});
 };
+
 const signInWithGoogle = () => {
-	const provider = new GoogleAuthProvider();
-	signInWithPopup(getAuth(), provider)
-		.then(() => router.push("/"))
-		.catch((error) => {
-			console.error(error);
-		});
+	signWithGoogle().then(res => {
+		if (res.success) {
+			router.push("/")
+		}
+	});
 };
 
 watch(email, () => invalidEmail.value = emailValidation(email.value));
