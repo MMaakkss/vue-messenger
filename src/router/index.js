@@ -1,39 +1,22 @@
-import { createMemoryHistory, createRouter as _createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
-const getCurrentUser = () => {
-	return new Promise((resolve, reject) => {
-		const removeListner = onAuthStateChanged(
-			getAuth(),
-			(user) => {
-				removeListner();
-				resolve(user);
-			},
-			reject
-		);
-	});
-};
-
-const isLoggedIn = async (to, from, next) => {
-	if (await getCurrentUser()) {
-		next();
-	} else {
-		next({ name: "login" });
-	}
-};
 
 const routes = [
 	{
 		path: "/",
 		name: "home",
 		component: () => import("@/views/ChatList.vue"),
-		beforeEnter: [isLoggedIn],
+		meta: {
+			requiresAuth: true,
+		},
 	},
 	{
 		path: "/chat/:id",
 		name: "chat",
 		component: () => import("@/views/Chat.vue"),
-		beforeEnter: [isLoggedIn],
+		meta: {
+			requiresAuth: true,
+		},
 	},
 	{
 		path: "/register",
@@ -52,10 +35,37 @@ const routes = [
 	},
 ];
 
-export const createRouter = () =>
-	_createRouter({
-		history: import.meta.env.SSR ? createMemoryHistory("/") : createWebHistory("/"),
-		routes,
-	});
+const router = createRouter({
+	history: createWebHistory(),
+	routes,
+	scrollBehavior() {
+		return { top: 0 };
+	},
+});
 
-// export default router;
+const getCurrentUser = () => {
+	return new Promise((resolve, reject) => {
+		const removeListner = onAuthStateChanged(
+			getAuth(),
+			(user) => {
+				removeListner();
+				resolve(user);
+			},
+			reject
+		);
+	});
+};
+
+router.beforeEach(async (to, from, next) => {
+	if (to.matched.some((record) => record.meta.requiresAuth)) {
+		if (await getCurrentUser()) {
+			next();
+		} else {
+			next({ name: "login" });
+		}
+	} else {
+		next();
+	}
+});
+
+export default router;

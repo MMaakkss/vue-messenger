@@ -1,7 +1,7 @@
-import { createSSRApp } from "vue";
-import { createRouter } from "./router";
-import App from "./App.vue";
+import { createApp } from "vue";
 import "./style.css";
+import App from "./App.vue";
+import router from "./router";
 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
@@ -17,10 +17,4 @@ const firebaseConfig = {
 
 getFirestore(initializeApp(firebaseConfig));
 
-export function createApp() {
-	const app = createSSRApp(App);
-	const router = createRouter();
-	app.use(router);
-
-	return { app, router };
-}
+createApp(App).use(router).mount("#app");
